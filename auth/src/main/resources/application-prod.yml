@@ -1,0 +1,64 @@
+server:
+  port: 8080
+  shutdown: graceful
+  compression:
+    enabled: true
+    min-response-size: 2048
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver # mysql8的版本写法，多了个cj， mysql8以下版本 com.mysql.jdbc.Driver
+    druid:
+      url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+      username: root
+      password: 123456
+      initial-size: 5 # 初始连接数
+      max-active: 20 # 最大连接池数量
+      max-wait: 60000 # 配置获取连接等待超时的时间
+      min-idle: 10 # 最小连接池数量
+      time-between-eviction-runs-millis: 60000 # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      min-evictable-idle-time-millis: 300000 # 配置一个连接在池中最小生存的时间，单位是毫秒
+
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      database: 0 # 默认是索引为的0的数据库
+      password: 123456
+      timeout: 30000
+      lettuce:
+        pool:
+          max-idle: 100
+          min-idle: 50
+          max-wait: 60000
+
+#mybatis:
+#  mapper-locations: classpath:mapper/*.xml
+#  type-aliases-package: com.fish.myspringboot.entity
+#  configuration:
+#    map-underscore-to-camel-case: true
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: org.example.domain.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+# debug: true
+trace: true
+# 默认所有日志都打印在控制台，如果要打印文件中的日志，需要配置 logging.file 或 logging.path
+logging:
+  config: classpath:logback.xml
+
+# token配置
+token:
+  prefix: "Bearer "
+  # 令牌自定义标识
+  header: Authorization
+  # 令牌密钥
+  secret: abcdefghijklmnopqrstuvwxyz123456
+  # 令牌有效期（默认24 * 60 * 60 * 1000L）
+  expiration: 86400000
+
